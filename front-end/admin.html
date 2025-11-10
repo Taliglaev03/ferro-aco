@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - FERRO & COURO</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#0f0f0f;color:#fff;padding:18px}
+    .wrap{max-width:900px;margin:20px auto}
+    input,textarea{width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #333;background:#111;color:#fff}
+    button{padding:10px 14px;border-radius:6px;border:0;background:#c5a46d;color:#111;font-weight:700;cursor:pointer}
+    .prod{background:#111;padding:12px;border-radius:8px;margin-bottom:8px;display:flex;gap:12px;align-items:center}
+    .prod img{width:80px;height:60px;object-fit:cover;border-radius:6px}
+    .prod .info{flex:1}
+    .danger{background:#444;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Painel Admin — Produtos</h1>
+
+    <label>Senha Admin:</label>
+    <input id="adminPass" type="password" placeholder="Cole a senha do ADMIN_PASSWORD" />
+
+    <h2>Adicionar produto</h2>
+    <input id="nome" placeholder="Nome do produto" />
+    <input id="preco" placeholder="Preço (ex: 49.90)" />
+    <input id="imagem" placeholder="URL da imagem (opcional)" />
+    <textarea id="descricao" rows="3" placeholder="Descrição (opcional)"></textarea>
+    <button id="btnAdd">Adicionar produto</button>
+
+    <h2 style="margin-top:20px">Produtos cadastrados</h2>
+    <div id="lista"></div>
+  </div>
+
+<script>
+  // CONFIG: trocar se a API estiver em outro endereço
+  const API_BASE = window.API_BASE || 'http://localhost:4000';
+
+  const adminPassInput = document.getElementById('adminPass');
+  const btnAdd = document.getElementById('btnAdd');
+  const lista = document.getElementById('lista');
+
+  async function fetchProdutos() {
+    const res = await fetch(API_BASE + '/api/produtos');
+    const data = await res.json();
+    renderProdutos(data);
+  }
+
+  function renderProdutos(produtos) {
+    lista.innerHTML = '';
+    if (!produtos || produtos.length === 0) {
+      lista.innerHTML = '<p>Nenhum produto cadastrado.</p>';
+      return;
+    }
+    produtos.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'prod';
+      el.innerHTML = `
+        <img src="${p.imagem || 'https://via.placeholder.com/160x120?text=sem+imagem'}" alt="">
+        <div class="info">
+          <strong>${p.nome}</strong>
+          <div>R$ ${p.preco}</div>
+          <div style="font-size:13px;color:#bbb">${p.descricao || ''}</div>
+        </div>
+        <div>
+          <button onclick="deleteProd('${p.id}') " class="danger">Excluir</button>
+        </div>
+      `;
+      lista.appendChild(el);
+    });
+  }
+
+  async function deleteProd(id) {
+    const pw = adminPassInput.value.trim();
+    if (!pw) return alert('Coloque a senha admin');
+    if (!confirm('Excluir produto?')) return;
+    const res = await fetch(API_BASE + '/api/produtos/' + id, {
+      method: 'DELETE',
+      headers: { 'x-admin-password': pw }
+    });
+    if (res.ok) {
+      alert('Produto excluído');
+      fetchProdutos();
+    } else {
+      const j = await res.json().catch(()=>({error:'erro'}));
+      alert('Erro: ' + (j.error || 'não autorizado'));
+    }
+  }
+
+  btnAdd.addEventListener('click', async () => {
+    const pw = adminPassInput.value.trim();
+    if (!pw) return alert('Coloque a senha admin');
+    const nome = document.getElementById('nome').value.trim();
+    const preco = document.getElementById('preco').value.trim();
+    const imagem = document.getElementById('imagem').value.trim();
+    const descricao = document.getElementById('descricao').value.trim();
+    if (!nome || !preco) return alert('Preencha nome e preço');
+    const body = { nome, preco, imagem, descricao };
+    const res = await fetch(API_BASE + '/api/produtos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': pw
+      },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      alert('Produto adicionado');
+      document.getElementById('nome').value = '';
+      document.getElementById('preco').value = '';
+      document.getElementById('imagem').value = '';
+      document.getElementById('descricao').value = '';
+      fetchProdutos();
+    } else {
+      const j = await res.json().catch(()=>({error:'erro'}));
+      alert('Erro: ' + (j.error || 'não autorizado'));
+    }
+  });
+
+  // inicializa
+  fetchProdutos();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "ferro-aco-backend",
+  "version": "1.0.0",
+  "description": "API de produtos para Ferro & Aço (LowDB)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "lowdb": "^1.0.0",
+    "nanoid": "^4.0.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,18 @@
+{
+  "produtos": [
+    {
+      "id": "p1",
+      "nome": "Pulseira Instinto",
+      "preco": "49.90",
+      "imagem": "https://images.unsplash.com/photo-1549213783-8284d0336c41?q=80&w=800&auto=format&fit=crop",
+      "descricao": "Couro legítimo, fecho metálico"
+    },
+    {
+      "id": "p2",
+      "nome": "Corrente Ferro",
+      "preco": "79.90",
+      "imagem": "https://images.unsplash.com/photo-1520975915920-7b2cfc4d0f5b?q=80&w=800&auto=format&fit=crop",
+      "descricao": "Corrente em aço inoxidável"
+    }
+  ]
+}
