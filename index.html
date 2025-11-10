@@ -363,6 +363,33 @@
   body.menu-open {
     overflow: hidden;
   }
+
+  /* Botão WhatsApp flutuante */
+.whatsapp-float {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  bottom: 20px;
+  right: 10px;
+  background-color: #25D366;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-float img {
+  width: 30px;
+  height: 30px;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+}
+
   </style>
 </head>
 <body>
@@ -454,6 +481,12 @@
       <a href="#">Instagram</a> | <a href="#">Facebook</a> | <a href="#">WhatsApp</a>
     </div>
   </footer>
+
+  <!-- Botão WhatsApp flutuante -->
+<a href="https://wa.me/5599999999999" target="_blank" class="whatsapp-float" title="Fale conosco no WhatsApp">
+  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+</a>
+
 
   <script>
   (function(){
